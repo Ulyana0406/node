@@ -5,37 +5,39 @@ const hostname = "127.0.0.1";
 const port = 3003;
 const server = http.createServer((request, response) => {
   const url = new URL(request.url, `http://${request.headers.host}`);
-  const searchParams = url.searchParams;
-
-  for (const [key, value] of searchParams.entries()) {
-    if (key === "hello") {
-      if (value) {
-        response.statusCode = 200;
-        response.setHeader("Content-Type", "text/plain");
-        response.write(`Hello, ${value}.`);
-        response.end();
-      } else {
-        response.statusCode = 400;
-        response.header = "Content-Type: text/plain";
-        response.write("Enter a name");
-        response.end();
-      }
-    } else if (key === "users") {
-      response.statusCode = 200;
-      response.setHeader("Content-Type", "application/json");
-      response.write(getUsers());
-      response.end();
-    } else if (key === "") {
-      response.statusCode = 200;
-      response.header = "Content-Type: text/plain";
-      response.write("Hello, World!");
-      response.end();
-    } else {
-      response.statusCode = 500;
-      response.setHeader("Content-Type", "text/plain");
-      response.end();
-      return;
-    }
+  const params = url.searchParams;
+  const name = params.get("hello");
+  if (request.url === "/") {
+    response.statusCode = 200;
+    response.statusMessage = "OK";
+    (response.setHeader = "Content-Type"), "text/plain";
+    response.write("Hello world!");
+    response.end();
+    return;
+  }
+  if (name) {
+    response.statusCode = 200;
+    response.statusMessage = "OK";
+    response.setHeader("Content-Type", "text/plain");
+    response.write(`Hello, ${name}.`);
+    response.end();
+  }
+  if (request.url === "/hello") {
+    response.statusCode = 400;
+    response.statusMessage = "Bad Request";
+    response.header = "Content-Type: text/plain";
+    response.write("Enter a name");
+    response.end();
+  } else if (request.url === "/users") {
+    response.statusCode = 200;
+    response.setHeader("Content-Type", "application/json");
+    response.write(getUsers());
+    response.end();
+  } else {
+    response.statusCode = 500;
+    response.setHeader("Content-Type", "text/plain");
+    response.end();
+    return;
   }
 });
 
