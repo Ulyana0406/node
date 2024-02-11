@@ -1,8 +1,8 @@
 const http = require("http");
 const getUsers = require("./modules/users");
-
-const hostname = "127.0.0.1";
-const port = 3003;
+require("dotenv").config;
+//const hostname = "127.0.0.1";
+//const port = 3003;
 const server = http.createServer((request, response) => {
   const url = new URL(request.url, `http://${request.headers.host}`);
   const params = url.searchParams;
@@ -41,6 +41,8 @@ const server = http.createServer((request, response) => {
   }
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Сервер запущен по адресу http://${hostname}:${port}/`);
+server.listen(process.env.PORT, process.env.HOSTNAME, () => {
+  console.log(
+    `Сервер запущен по адресу http://${process.env.HOSTNAME}:${process.env.PORT}/`
+  );
 });
